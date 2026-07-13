@@ -1,0 +1,345 @@
+.register-page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background:
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(0, 94, 156, 0.05) 0%,
+      rgba(255, 255, 255, 0) 50%
+    ),
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(255, 199, 44, 0.04) 0%,
+      rgba(255, 255, 255, 0) 50%
+    );
+  position: relative;
+}
+
+.back-home-link {
+  position: absolute;
+  top: 2rem;
+  left: 5%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.back-home-link:hover {
+  color: var(--pln-blue);
+  transform: translateX(-4px);
+}
+
+.register-card {
+  width: 100%;
+  max-width: 800px;
+  padding: 3rem 2.5rem;
+  border-radius: 24px;
+  border: 1px solid var(--border-light);
+  background: #ffffff;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Multi-section form styles */
+.form-section {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
+  text-align: left;
+}
+
+.form-section:hover {
+  border-color: var(--pln-cyan);
+  box-shadow: var(--shadow-md);
+}
+
+.form-section-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--pln-blue);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.grid-span-full {
+  grid-column: 1 / -1;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 500 !important;
+}
+
+.radio-label input[type="radio"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: var(--pln-blue);
+  cursor: pointer;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-top: 0.1rem;
+  accent-color: var(--pln-blue);
+  cursor: pointer;
+}
+
+.req-star {
+  color: #ef4444;
+  margin-left: 0.2rem;
+}
+
+.info-note {
+  font-size: 0.8rem;
+  color: rgba(255, 0, 0, 0.815);
+  margin-top: 0.25rem;
+}
+
+.pickup-info-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+  border-left: 4px solid var(--pln-blue);
+}
+
+.pickup-info-box h5 {
+  color: var(--pln-blue);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.pickup-info-box p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+
+.register-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.register-pln-logo {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}
+
+.register-title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.register-subtitle {
+  color: var(--pln-blue);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  margin-top: 0.25rem;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.form-control {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  padding: 0.85rem 1.2rem;
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition-fast);
+  width: 100%;
+}
+
+.form-control:focus {
+  border-color: var(--pln-blue);
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 94, 156, 0.1);
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-control {
+  padding-right: 5rem;
+}
+
+.btn-toggle-password {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--pln-blue);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-toggle-password:hover {
+  color: var(--pln-yellow);
+}
+
+.register-submit-btn {
+  margin-top: 1rem;
+  width: 100%;
+  justify-content: center;
+  padding: 1rem;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.register-submit-btn:hover {
+  color: var(--pln-blue);
+}
+
+.form-error-alert {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.success-card {
+  text-align: center;
+  border-color: rgba(34, 197, 94, 0.3);
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.1);
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.success-message {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.billing-summary {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.billing-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.92rem;
+}
+
+.text-yellow {
+  color: var(--pln-blue);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.email-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 550px) {
+  .register-card {
+    padding: 2rem 1.5rem;
+  }
+  .back-home-link {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-bottom: 2rem;
+    align-self: flex-start;
+  }
+}
