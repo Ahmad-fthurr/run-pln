@@ -460,12 +460,21 @@ const AdminDashboard = ({ onLogout }) => {
 
   // delete user
   const handleDelete = async (id, nama) => {
-    // Memberikan konfirmasi agar tidak tidak sengaja terhapus
-    const confirmDelete = window.confirm(
-      `Apakah Anda yakin ingin menghapus peserta bernama "${nama}"?`,
-    );
+    // Memberikan konfirmasi agar tidak tidak sengaja terhapus kayak confirm dulu
+    const result = await Swal.fire({
+      title: "Hapus Peserta?",
+      text: `Apakah Anda yakin ingin menghapus "${nama}" dari daftar PLN Energy Run 2026? Data yang dihapus tidak bisa dikembalikan!`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6", 
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+      background: "#ffffff", 
+      iconColor: "#f8bb86",
+    });
 
-    if (!confirmDelete) return;
+    if (!result.isConfirmed) return;
 
     try {
       // Panggil API backend untuk menghapus data berdasarkan ID
@@ -474,9 +483,19 @@ const AdminDashboard = ({ onLogout }) => {
       // Langsung update state di frontend agar barisnya hilang dari tabel
       setUsers((prev) => prev.filter((u) => u.id !== id));
 
-      alert("Data peserta berhasil dihapus.");
+      Swal.fire({
+        title: "Terhapus!",
+        text: "Data peserta berhasil dihapus.",
+        icon: "success",
+        timer: 2000, 
+        showConfirmButton: false,
+      });
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal menghapus data peserta.");
+      Swal.fire({
+        title: "Gagal!",
+        text: err.response?.data?.message || "Gagal menghapus data peserta.",
+        icon: "error",
+      });
     }
   };
 
