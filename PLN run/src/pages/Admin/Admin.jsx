@@ -477,10 +477,9 @@ const AdminDashboard = ({ onLogout }) => {
     if (!result.isConfirmed) return;
 
     try {
-      // Panggil API backend untuk menghapus data berdasarkan ID
+     
       await axios.delete(`${BASE_URL}/api/user/delete/${id}`);
 
-      // Langsung update state di frontend agar barisnya hilang dari tabel
       setUsers((prev) => prev.filter((u) => u.id !== id));
 
       Swal.fire({
