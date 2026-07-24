@@ -385,6 +385,7 @@ const UserModal = ({ user, onClose, onVerify, verifying }) => {
 // ────────────────────────────────────────────────────────────
 // Main Admin Dashboard
 // ────────────────────────────────────────────────────────────
+
 const AdminDashboard = ({ onLogout }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -421,6 +422,67 @@ const AdminDashboard = ({ onLogout }) => {
     );
   }, [users, search]);
 
+  // Helper untuk mendapatkan status label Racepack saat ini
+  const getRacepackStatusLabel = (method, isHandled) => {
+    const isPickup = method?.toLowerCase() === "pickup";
+    if (isHandled) {
+      return isPickup ? "✅ Sudah Diambil" : "🚚 Sudah Dikirim";
+    }
+    return isPickup ? "⏳ Belum Diambil" : "📦 Belum Dikirim";
+  };
+
+  // Fungsi untuk mengubah status pengambilan/pengiriman racepack
+  const handleToggleRacepack = async (id, currentMethod, currentStatus) => {
+    const isPickup = currentMethod?.toLowerCase() === "pickup";
+    const nextStatus = !currentStatus; // beralih benar jika sebelumnya salah
+
+    const actionText = isPickup
+      ? `Ubah menjadi ${nextStatus ? '"Sudah Diambil"' : '"Belum Diambil"'}?`
+      : `Ubah menjadi ${nextStatus ? '"Sudah Dikirim"' : '"Belum Dikirim"'}?`;
+
+    const result = await Swal.fire({
+      title: "Update Status Racepack",
+      text: actionText,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#aaa",
+      confirmButtonText: "Ya, Ubah!",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      // Menembak API patch ke backend bawa status baru (is_racepack_handled)
+      await axios.patch(`${BASE_URL}/api/user/update-racepack/${id}`, {
+        is_racepack_handled: nextStatus,
+      });
+
+      // Update state local biar tabel langsung berubah tanpa reload halaman
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === id ? { ...u, is_racepack_handled: nextStatus } : u,
+        ),
+      );
+
+      Swal.fire({
+        title: "Berhasil!",
+        text: "Status logistik racepack berhasil diperbarui.",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        title: "Gagal!",
+        text:
+          err.response?.data?.message || "Gagal memperbarui status racepack.",
+        icon: "error",
+      });
+    }
+  };
+
   // Stats
   const totalPeserta = users.length;
   const totalLunas = users.filter(
@@ -437,7 +499,6 @@ const AdminDashboard = ({ onLogout }) => {
     setVerifying(true);
     try {
       await axios.patch(`${BASE_URL}/api/user/verify-payment/${id}`);
-      // Update local state immediately
       setUsers((prev) =>
         prev.map((u) =>
           u.id === id ? { ...u, status_pembayaran: "Lunas", isPaid: true } : u,
@@ -460,33 +521,29 @@ const AdminDashboard = ({ onLogout }) => {
 
   // delete user
   const handleDelete = async (id, nama) => {
-    // Memberikan konfirmasi agar tidak tidak sengaja terhapus kayak confirm dulu
     const result = await Swal.fire({
       title: "Hapus Peserta?",
       text: `Apakah Anda yakin ingin menghapus "${nama}" dari daftar PLN Energy Run 2026? Data yang dihapus tidak bisa dikembalikan!`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6", 
+      cancelButtonColor: "#3085d6",
       confirmButtonText: "Ya, Hapus!",
       cancelButtonText: "Batal",
-      background: "#ffffff", 
+      background: "#ffffff",
       iconColor: "#f8bb86",
     });
 
     if (!result.isConfirmed) return;
 
     try {
-     
       await axios.delete(`${BASE_URL}/api/user/delete/${id}`);
-
       setUsers((prev) => prev.filter((u) => u.id !== id));
-
       Swal.fire({
         title: "Terhapus!",
         text: "Data peserta berhasil dihapus.",
         icon: "success",
-        timer: 2000, 
+        timer: 2000,
         showConfirmButton: false,
       });
     } catch (err) {
@@ -652,14 +709,63 @@ const AdminDashboard = ({ onLogout }) => {
                     </td>
                     <td>{u.kota || "-"}</td>
                     <td style={{ fontWeight: 700 }}>{u.ukuran_kaos || "-"}</td>
-                    <td
-                      style={{
-                        textTransform: "capitalize",
-                        fontSize: "0.82rem",
-                      }}
-                    >
-                      {u.pengambilan_racepack || "-"}
+
+                    {/* BAGIAN RACEPACK DENGAN BUTTON INTERAKTIF */}
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "4px",
+                        }}
+                      >
+                        <span
+                          style={{
+                            textTransform: "capitalize",
+                            fontSize: "0.75rem",
+                            color: "var(--text-muted)",
+                          }}
+                        >
+                          📦 {u.pengambilan_racepack || "-"}
+                        </span>
+                        <button
+                          className={`btn-racepack-status ${u.is_racepack_handled ? "handled" : "pending"}`}
+                          onClick={() =>
+                            handleToggleRacepack(
+                              u.id,
+                              u.pengambilan_racepack,
+                              u.is_racepack_handled,
+                            )
+                          }
+                          style={{
+                            padding: "4px 8px",
+                            fontSize: "0.75rem",
+                            borderRadius: "6px",
+                            border: "none",
+                            cursor: "pointer",
+                            fontWeight: "600",
+                            textAlign: "center",
+                            width: "fit-content",
+                            background: u.is_racepack_handled
+                              ? "#e8f5e9"
+                              : "#fff3e0",
+                            color: u.is_racepack_handled
+                              ? "#2e7d32"
+                              : "#ef6c00",
+                            border: u.is_racepack_handled
+                              ? "1px solid #a5d6a7"
+                              : "1px solid #ffe0b2",
+                            transition: "all 0.2s ease",
+                          }}
+                        >
+                          {getRacepackStatusLabel(
+                            u.pengambilan_racepack,
+                            u.is_racepack_handled,
+                          )}
+                        </button>
+                      </div>
                     </td>
+
                     <td>
                       <span
                         className={`pay-badge ${getPayClass(u.status_pembayaran, u.isPaid)}`}
@@ -724,7 +830,6 @@ const AdminDashboard = ({ onLogout }) => {
     </div>
   );
 };
-
 // ────────────────────────────────────────────────────────────
 // Root Admin Component
 // ────────────────────────────────────────────────────────────

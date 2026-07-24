@@ -7,7 +7,7 @@ import "./Login.css";
 const Login = () => {
   const [form, setForm] = useState({
     email: "",
-    nama: "",
+    password: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ const Login = () => {
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value, 
     });
     if (error) setError("");
   };
@@ -26,8 +26,8 @@ const Login = () => {
     e.preventDefault();
 
     // 1. Validasi kolom kosong
-    if (!form.email || !form.nama) {
-      setError("Harap isi Email dan Nama Lengkap Anda.");
+    if (!form.email || !form.password) {
+      setError("Harap isi Email dan Password anda.");
       return;
     }
 
@@ -42,36 +42,34 @@ const Login = () => {
 
     try {
       const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-      
-      // Mengirimkan request login dengan email dan nama sesuai instruksi user
+
       const response = await axios.post(`${baseUrl}/api/user/login`, {
         email: form.email,
-        nama: form.nama,
+        password: form.password,
       });
 
       if (response.status === 200 || response.status === 201) {
-        const userData = response.data.user || response.data || {
-          nama: form.nama,
-          email: form.email,
-        };
+        const userData = response.data.user ||
+          response.data || {
+            password: form.password,
+            email: form.email,
+          };
 
         // Simpan sesi ke localStorage
         localStorage.setItem("userSession", JSON.stringify(userData));
-        
+
         navigate("/dashboard");
       } else {
         throw new Error("Gagal login, data tidak cocok.");
       }
     } catch (err) {
       console.error("Login error details:", err);
-      
-      // Fallback jika API endpoint /api/user/login belum siap atau error 404,
-      // kita bisa memberikan opsi coba lagi atau simulasi data untuk keperluan frontend.
+
       const errorMessage =
         err.response?.data?.message ||
         err.message ||
-        "Data pendaftaran tidak ditemukan. Pastikan email dan nama sesuai.";
-      
+        "Gagal masuk. Silakan periksa kembali email dan password Anda.";
+
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -119,21 +117,21 @@ const Login = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="nama">Nama Lengkap Terdaftar</label>
+            <label htmlFor="password">Password</label>
             <input
-              type="text"
-              id="nama"
-              name="nama"
-              placeholder="Masukkan nama lengkap sesuai pendaftaran"
-              value={form.nama}
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Masukkan Password Anda"
+              value={form.password}
               onChange={handleChange}
               className="form-control"
               required
             />
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="btn btn-primary login-submit-btn"
             disabled={loading}
           >
@@ -142,7 +140,10 @@ const Login = () => {
         </form>
 
         <div className="login-footer-text">
-          Belum mendaftar sebagai peserta? <Link to="/register" className="text-link">Daftar Sekarang</Link>
+          Belum mendaftar sebagai peserta?{" "}
+          <Link to="/register" className="text-link">
+            Daftar Sekarang
+          </Link>
         </div>
       </div>
     </div>

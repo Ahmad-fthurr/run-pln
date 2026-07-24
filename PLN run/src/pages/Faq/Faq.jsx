@@ -221,6 +221,7 @@ const Faq = () => {
   const [expandedItems, setExpandedItems] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [user, setUser] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const savedSession = localStorage.getItem("userSession");
@@ -250,7 +251,7 @@ const Faq = () => {
     setSearchQuery(e.target.value);
   };
 
-  // Filter questions based on search query AND/OR selected category
+  // Filter pertanyaan / pencarian
   const filteredData = faqData
     .map((cat) => {
       const filteredQuestions = cat.questions.filter(
@@ -283,22 +284,33 @@ const Faq = () => {
             <span className="brand-year">2025</span>
           </div>
         </div>
-        <nav className="nav-links">
-          <a href="/#kategori" className="nav-link">
+
+        <button
+          className={`nav-toggle ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
+          <a href="/#kategori" className="nav-link" onClick={() => setMenuOpen(false)}>
             Kategori
           </a>
-          <a href="/#cara-bergabung" className="nav-link">
+          <a href="/#cara-bergabung" className="nav-link" onClick={() => setMenuOpen(false)}>
             Cara Bergabung
           </a>
-          <a href="/#hubungi-kami" className="nav-link">
+          <a href="/#hubungi-kami" className="nav-link" onClick={() => setMenuOpen(false)}>
             Hubungi Kami
           </a>
           {/* admin */}
-          <Link to="/admin" className="nav-link">
+          <Link to="/admin" className="nav-link" onClick={() => setMenuOpen(false)}>
             Admin
           </Link>
           {/*  */}
-          <Link to="/faq" className="nav-link active">
+          <Link to="/faq" className="nav-link active" onClick={() => setMenuOpen(false)}>
             FAQ
           </Link>
           {user ? (
@@ -307,11 +319,15 @@ const Faq = () => {
                 to="/dashboard"
                 className="nav-link font-semibold text-gradient"
                 style={{ fontWeight: 700 }}
+                onClick={() => setMenuOpen(false)}
               >
                 Dashboard
               </Link>
               <button
-                onClick={handleLogout}
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
                 className="btn btn-secondary nav-cta"
                 style={{ padding: "0.5rem 1.2rem", fontSize: "0.85rem" }}
               >
@@ -324,10 +340,15 @@ const Faq = () => {
                 to="/login"
                 className="nav-link login-nav-link"
                 style={{ marginRight: "0.5rem" }}
+                onClick={() => setMenuOpen(false)}
               >
                 Masuk
               </Link>
-              <Link to="/register" className="btn btn-primary nav-cta">
+              <Link
+                to="/register"
+                className="btn btn-primary nav-cta"
+                onClick={() => setMenuOpen(false)}
+              >
                 Daftar
               </Link>
             </>
@@ -434,8 +455,10 @@ const Faq = () => {
       </main>
 
       {/* Partners and Sponsors Section */}
+
       <section className="partners-section">
         <div className="partners-container">
+
           {/* Row 1: Powered & Organized */}
           <div className="partners-row main-partners">
             <div className="partner-group">
@@ -557,7 +580,7 @@ const Faq = () => {
         </div>
         <div className="footer-divider-bar"></div>
         <p className="footer-copyright">
-          &copy; 2025 PT PLN (Persero) & YBM PLN. All Rights Reserved.
+          &copy; 2026 PT PLN (Persero) & YBM PLN. All Rights Reserved.
         </p>
       </footer>
     </div>

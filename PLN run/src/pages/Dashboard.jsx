@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
@@ -146,15 +147,29 @@ const Dashboard = () => {
             <span className="brand-year">2026</span>
           </div>
         </div>
-        <nav className="nav-links">
-          <Link to="/" className="nav-link">
+
+        <button
+          className={`nav-toggle ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
+          <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
             Beranda
           </Link>
-          <Link to="/faq" className="nav-link">
+          <Link to="/faq" className="nav-link" onClick={() => setMenuOpen(false)}>
             FAQ
           </Link>
           <button
-            onClick={handleLogout}
+            onClick={() => {
+              handleLogout();
+              setMenuOpen(false);
+            }}
             className="btn btn-secondary nav-cta logout-btn"
           >
             Keluar
@@ -206,7 +221,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="ticket-qr-area">
-                {/* Wrapper dengan relative position untuk menumpuk logo */}
+                {/* Wrapper dengan relative position untuk menumpuk logo di tengah */}
                 <div
                   className="qr-wrapper"
                   style={{ position: "relative", display: "inline-block" }}
@@ -227,9 +242,9 @@ const Dashboard = () => {
                       top: "50%",
                       left: "50%",
                       transform: "translate(-50%, -50%)",
-                      width: "32px", // Ukuran logo agar pas di tengah
+                      width: "32px", 
                       height: "32px",
-                      backgroundColor: "#ffffff", // Background putih agar kotak QR di belakangnya tertutup rapi
+                      backgroundColor: "#ffffff", 
                       padding: "3px",
                       borderRadius: "4px",
                       boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
@@ -285,11 +300,11 @@ const Dashboard = () => {
                   <span className="va-label">Nomor Virtual Account (VA):</span>
                   <div className="va-number-container">
                     <strong className="va-number">
-                      {"No  Dana, Rek kita"}
+                      {"BRI/BSI"}
                     </strong>
                     <button
                       onClick={() => {
-                        navigator.clipboard.writeText("No Dana, Rek kita");
+                        navigator.clipboard.writeText("BRI/BSI");
                         alert("Nomor VA berhasil disalin!");
                       }}
                       className="btn-copy-va"

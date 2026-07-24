@@ -271,6 +271,12 @@
   color: var(--pln-blue);
 }
 
+.btn-racepack-status:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  filter: brightness(0.95);
+}
+
 .form-error-alert {
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.25);
@@ -331,15 +337,92 @@
   margin-bottom: 2rem;
 }
 
+/* Email Verification Check Styles */
+.email-verify-container {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.email-verify-input {
+  flex: 1;
+}
+
+.email-verify-btn {
+  background-color: var(--pln-blue);
+  color: #fff;
+  padding: 0 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.email-verify-btn.verified {
+  background-color: #28a745;
+  cursor: default;
+}
+
+.email-verify-btn:disabled:not(.verified) {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.email-verify-btn:hover:not(:disabled):not(.verified) {
+  background-color: var(--pln-cyan);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .form-section {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-section-title {
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
 @media (max-width: 550px) {
   .register-card {
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.25rem;
+    border-radius: 16px;
   }
   .back-home-link {
     position: relative;
     top: 0;
     left: 0;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     align-self: flex-start;
+  }
+  .register-title {
+    font-size: 1.5rem;
+  }
+  .form-grid-3 {
+    gap: 0.4rem;
+  }
+  .form-control {
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+  }
+  .email-verify-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .email-verify-btn {
+    padding: 0.85rem;
+    width: 100%;
   }
 }

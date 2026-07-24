@@ -93,8 +93,39 @@
   text-decoration: underline;
 }
 
+.back-home-link {
+  position: absolute;
+  top: 2rem;
+  left: 5%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.back-home-link:hover {
+  color: var(--pln-blue);
+  transform: translateX(-4px);
+}
+
 @media (max-width: 550px) {
+  .login-page-container {
+    padding: 1.5rem 1rem;
+  }
   .login-card {
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.25rem;
+    border-radius: 16px;
+  }
+  .back-home-link {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-bottom: 1.5rem;
+    align-self: flex-start;
+  }
+  .login-title {
+    font-size: 1.5rem;
   }
 }
