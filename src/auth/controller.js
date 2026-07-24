@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
-    const { nama, email, password, } = req.body;
+    const { nama, email, password } = req.body;
 
     const userExist = await service.findByEmail(email);
     if (userExist)
@@ -38,14 +38,14 @@ const login = async (req, res) => {
     if (!match) return res.status(400).json({ msg: "Password salah" });
 
     const token = jwt.sign(
-      { id: user.id, nama: user.nama, },
+      { id: user.id, nama: user.nama },
       process.env.SECRET_KEY,
       { expiresIn: process.env.JWT_EXPIRES_IN },
     );
 
     res.status(200).json({
-      id: user.id, 
-      nama: user.nama, 
+      id: user.id,
+      nama: user.nama,
       token,
       msg: `Login berhasil ${user.nama}`,
     });
@@ -54,4 +54,26 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const checkEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // 1. mencari email di database
+    const userExist = await service.findByEmail(email);
+
+    if (!userExist) {
+      return res
+        .status(404)
+        .json({ msg: "Email Anda tidak terdaftar dalam database, Cek kembali aplikasi PLN MOBILE." });
+    }
+
+    res.status(200).json({
+      success: "Email terverifikasi!",
+      msg: "Silakan lanjutkan pengisian formulir di bawah.",
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { register, login, checkEmail };

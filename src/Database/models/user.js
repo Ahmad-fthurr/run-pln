@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -13,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init({
-
-     id: {
+  User.init(
+    {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -104,6 +102,7 @@ module.exports = (sequelize, DataTypes) => {
       waktu_pengambilan: {
         type: DataTypes.STRING,
         allowNull: true,
+        defaultValue: false,
       },
       penerima_nama: {
         type: DataTypes.STRING,
@@ -150,11 +149,18 @@ module.exports = (sequelize, DataTypes) => {
       bukti_pembayaran: {
         type: DataTypes.STRING,
         allowNull: true,
-      }
-  }, {
-    sequelize,
-    modelName: 'User',
-    tableName: 'user',
-  });
+      },
+      is_racepack_handled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+    },
+    {
+      sequelize,
+      modelName: "User",
+      tableName: "user",
+    },
+  );
   return User;
 };

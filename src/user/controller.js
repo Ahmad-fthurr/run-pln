@@ -1,4 +1,10 @@
-const { findAllUser, createUser, deleteUser, findUserById, updateUser } = require("./servis.js");
+const {
+  findAllUser,
+  createUser,
+  deleteUser,
+  findUserById,
+  updateUser,
+} = require("./servis.js");
 const bcrypt = require("bcrypt");
 
 const findAll = async (req, res) => {
@@ -44,14 +50,24 @@ const buatUser = async (req, res) => {
       persetujuan_asuransi,
     } = req.body;
 
+    // 1. Cari user berdasarkan email
+    const {User} = require("../Database/models"); 
+    const userExist = await User.findOne({ where: { email } });
+
+    if (!userExist) {
+      return res.status(404).json({
+        message: "Alamat email Anda tidak terdaftar dalam database peserta!",
+      });
+    }
+
+    // 2. Hash password & Generate Virtual Account
     const hashedPassword = await bcrypt.hash(password, 10);
+    const virtual_account =
+      "8800" + Math.floor(100000000000 + Math.random() * 900000000000);
 
-    // Generate a 16-digit Virtual Account (prefixed with 8800 + 12 random digits)
-    const virtual_account = "000000000";
 
-    const user = await createUser({
+    await updateUser(userExist.id, {
       nama,
-      email,
       password: hashedPassword,
       no_telepon,
       category,
@@ -82,22 +98,31 @@ const buatUser = async (req, res) => {
       virtual_account,
     });
 
-    res.status(201).json({ message: "Pendaftaran Berhasil!!", user });
+    //
+    const updatedData = await findUserById(userExist.id);
+
+    return res
+      .status(200)
+      .json({ message: "Pendaftaran Berhasil!!", user: updatedData });
   } catch (error) {
     console.error("Error saat pendaftaran user:", error);
     if (error.name === "SequelizeUniqueConstraintError") {
       return res.status(400).json({ message: "Alamat email sudah terdaftar!" });
     }
-    res.status(500).json({ message: "Terjadi kesalahan pada server saat pendaftaran" });
+    return res
+      .status(500)
+      .json({ message: "Terjadi kesalahan pada server saat pendaftaran" });
   }
 };
 
 const uploadBukti = async (req, res) => {
   try {
     const { id } = req.body;
-    
+
     if (!req.file) {
-      return res.status(400).json({ message: "Harap sertakan file bukti pembayaran!" });
+      return res
+        .status(400)
+        .json({ message: "Harap sertakan file bukti pembayaran!" });
     }
 
     if (!id) {
@@ -111,7 +136,7 @@ const uploadBukti = async (req, res) => {
 
     const updatedUser = await updateUser(id, {
       bukti_pembayaran: req.file.filename,
-      status_pembayaran: "Menunggu Verifikasi"
+      status_pembayaran: "Menunggu Verifikasi",
     });
 
     res.status(200).json({
@@ -148,11 +173,13 @@ const uploadBukti = async (req, res) => {
         isPaid: updatedUser.isPaid,
         virtual_account: updatedUser.virtual_account,
         bukti_pembayaran: updatedUser.bukti_pembayaran,
-      }
+      },
     });
   } catch (error) {
     console.error("Error saat mengunggah bukti pembayaran:", error);
-    res.status(500).json({ message: "Terjadi kesalahan pada server saat mengunggah bukti pembayaran" });
+    res.status(500).json({
+      message: "Terjadi kesalahan pada server saat mengunggah bukti pembayaran",
+    });
   }
 };
 
@@ -182,8 +209,47 @@ const verifyPayment = async (req, res) => {
     });
   } catch (error) {
     console.error("Error saat verifikasi pembayaran:", error);
-    res.status(500).json({ message: "Terjadi kesalahan saat verifikasi pembayaran" });
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan saat verifikasi pembayaran" });
   }
 };
 
-module.exports = { findAll, hapusUser, buatUser, uploadBukti, verifyPayment };
+const updateRacepack = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { is_racepack_handled } = req.body;
+
+    const userExist = await findUserById(id);
+    if (!userExist) {
+      return res.status(404).json({ message: "User tidak ditemukan!" });
+    }
+
+    const updatedUser = await updateUser(id, {
+      is_racepack_handled: is_racepack_handled,
+    });
+
+    res.status(200).json({
+      message: "Status logistik racepack berhasil diperbarui!",
+      user: {
+        id: updatedUser.id,
+        nama: updatedUser.nama,
+        is_racepack_handled: updatedUser.is_racepack_handled,
+      },
+    });
+  } catch (error) {
+    console.error("Error saat update status racepack:", error);
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan saat update status racepack" });
+  }
+};
+
+module.exports = {
+  findAll,
+  hapusUser,
+  buatUser,
+  uploadBukti,
+  verifyPayment,
+  updateRacepack,
+};

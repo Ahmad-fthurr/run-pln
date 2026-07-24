@@ -8,6 +8,7 @@ const {
   hapusUser,
   uploadBukti,
   verifyPayment,
+  updateRacepack,
 } = require("./controller.js");
 
 // Configure Multer storage to retain original file extensions
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, "bukti-" + uniqueSuffix + path.extname(file.originalname));
-  }
+  },
 });
 
 const upload = multer({ storage: storage });
@@ -28,5 +29,6 @@ router.delete("/delete/:id", hapusUser);
 router.post("/create", buatUser);
 router.post("/upload-bukti", upload.single("bukti"), uploadBukti);
 router.patch("/verify-payment/:id", verifyPayment);
+router.patch("/update-racepack/:id", updateRacepack);
 
 module.exports = router;

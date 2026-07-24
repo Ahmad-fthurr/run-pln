@@ -88,7 +88,8 @@ module.exports = {
       },
       waktu_pengambilan: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
+        defaultValue: false
       },
       penerima_nama: {
         type: Sequelize.STRING,
@@ -135,6 +136,11 @@ module.exports = {
       bukti_pembayaran: {
         type: Sequelize.STRING,
         allowNull: true
+      },
+      is_racepack_handled: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,

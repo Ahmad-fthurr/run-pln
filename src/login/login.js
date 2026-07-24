@@ -1,16 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-// 1. Import objek 'db' dari folder models
-// Jalur '../models' akan otomatis mencari file index.js di dalamnya
 const db = require("../Database/models/index.js");
 
 router.post("/login", async (req, res) => {
-  const { email, nama } = req.body;
+  const { email, password, nama } = req.body;
 
   // Validasi input kosong
-  if (!email || !nama) {
-    return res.status(400).json({ message: "Email dan Nama wajib diisi!" });
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email dan password wajib diisi!" });
   }
 
   try {
@@ -21,12 +19,6 @@ router.post("/login", async (req, res) => {
     // Jika email tidak ditemukan di database
     if (!userTerdaftar) {
       return res.status(404).json({ message: "Alamat email belum terdaftar!" });
-    }
-
-    if (userTerdaftar.nama.toLowerCase() !== nama.toLowerCase()) {
-      return res.status(400).json({
-        message: "Nama lengkap tidak sesuai dengan data pendaftaran!",
-      });
     }
 
     // Jika berhasil lolos semua pengecekan
