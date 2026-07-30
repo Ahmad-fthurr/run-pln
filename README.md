@@ -13,7 +13,7 @@ Aplikasi ini digunakan untuk mengelola data peserta, kategori lari (5K, 10K, 21K
 
 ---
 
-## 📋 Langkah Awal & Persiapan Data (Admin)
+## Langkah Awal & Persiapan Data (Admin)
 
 Sebelum menjalankan aplikasi, admin perlu menyiapkan data awal (daftar email) yang diekspor dari Google Sheets ke basis data phpMyAdmin.
 
